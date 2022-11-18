@@ -53,8 +53,8 @@ model Event {
   student   Student?   @relation(fields: [student_id], references: [id])
   professor Professor? @relation(fields: [professor_id], references: [id])
 
-  lesson_id Int
-  lesson    Lesson @relation(fields: [lesson_id], references: [id])
+  lesson_id Int?
+  lesson    Lesson? @relation(fields: [lesson_id], references: [id])
 }
 
 model StudentsOnLessons {
