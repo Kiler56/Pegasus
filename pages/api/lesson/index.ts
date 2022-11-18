@@ -49,7 +49,7 @@ export default async function handler(
         data: {
           code,
           name: body.name,
-          professor_id: 1,
+          professor_id: "pTfA7wNqkFNSK7LVtDc6IoyUjpn1",
         },
       });
 
