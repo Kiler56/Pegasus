@@ -6,12 +6,12 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Student {
-  id       Int    @id() @default(autoincrement())
+  id       String    @id() 
   username String
 
   lessons StudentsOnLessons[]
@@ -19,7 +19,7 @@ model Student {
 }
 
 model Professor {
-  id      Int    @id() @default(autoincrement())
+  id      String    @id() 
   name    String
   surname String
 
@@ -32,7 +32,7 @@ model Lesson {
   name String
   code String
 
-  professor_id Int
+  professor_id String
 
   events    Event[]
   students  StudentsOnLessons[]
@@ -47,18 +47,18 @@ model Event {
   end         DateTime
   finished    Boolean  @default(false)
 
-  student_id   Int?
-  professor_id Int?
+  student_id   String?
+  professor_id String?
 
   student   Student?   @relation(fields: [student_id], references: [id])
   professor Professor? @relation(fields: [professor_id], references: [id])
 
-  lesson_id Int
-  lesson    Lesson @relation(fields: [lesson_id], references: [id])
+  lesson_id Int?
+  lesson    Lesson? @relation(fields: [lesson_id], references: [id])
 }
 
 model StudentsOnLessons {
-  student_id Int
+  student_id String
   student    Student @relation(fields: [student_id], references: [id])
   lesson_id  Int
   lesson     Lesson  @relation(fields: [lesson_id], references: [id])
