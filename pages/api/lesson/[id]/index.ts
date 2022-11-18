@@ -37,6 +37,14 @@ export default async function handler(
         where: {
           id: parseInt(id as string),
         },
+        include: {
+          professor: {
+            select: {
+              name: true,
+              surname: true,
+            },
+          },
+        },
       });
 
       return res.status(200).json({ code: 200, result });
