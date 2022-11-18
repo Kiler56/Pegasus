@@ -4,6 +4,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { RequestMethods } from "../../../enum/RequestMethods";
 import prisma from "../../../libs/prisma";
 import { customAlphabet } from "nanoid";
+import getSession from "../../../utils/getSession";
+import { UserType } from "../../../enum/UserType";
 
 type Error = {
   code: number;
@@ -42,6 +44,15 @@ export default async function handler(
     }
 
     case RequestMethods.POST: {
+      const session = await getSession(req);
+
+      if (
+        !session.loggedIn ||
+        session.userType !== UserType.PROFESSOR ||
+        !session.data
+      )
+        return res.status(403).json({ code: 403, message: "Forbidden" });
+
       const body: PostBody = req.body;
       const code = genCodeAlphabet(5);
 
@@ -49,11 +60,13 @@ export default async function handler(
         data: {
           code,
           name: body.name,
-          professor_id: "pTfA7wNqkFNSK7LVtDc6IoyUjpn1",
+          professor_id: session.data.id,
         },
       });
 
       return res.status(200).json({ code: 200, result });
     }
+    default:
+      return res.status(405);
   }
 }
