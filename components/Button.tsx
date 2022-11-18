@@ -18,8 +18,8 @@ export const Button = ({
 
   return (
     <div
-      className={`max-h-max rounded-lg text-center font-bold text-white transition-all hover:-translate-y-1 active:translate-y-1`}
-      style={{...extraStyle, ...style}}
+      className={`max-h-max cursor-pointer rounded-lg text-center font-bold text-white transition-all hover:-translate-y-1 active:translate-y-1`}
+      style={{ ...extraStyle, ...style }}
       onMouseEnter={() =>
         setStyle({
           backgroundColor: primary,
