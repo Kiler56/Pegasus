@@ -2,7 +2,9 @@
 import { Event } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { RequestMethods } from "../../../enum/RequestMethods";
+import { UserType } from "../../../enum/UserType";
 import prisma from "../../../libs/prisma";
+import getSession from "../../../utils/getSession";
 
 type Error = {
   code: number;
@@ -40,18 +42,34 @@ export default async function handler(
       return res.status(200).json({ code: 200, result });
     }
     case RequestMethods.POST: {
+      const session = await getSession(req);
+
+      if (!session.loggedIn)
+        return res.status(403).json({ code: 403, message: "Forbidden" });
+
       const body: PostBody = req.body;
-      console.log(body);
+
       const result = await prisma.event.create({
         data: {
           description: body.description,
           end: new Date(body.end),
           start: new Date(body.start),
           title: body.title,
+          professor_id:
+            session.userType === UserType.PROFESSOR
+              ? session.data?.id
+              : undefined,
+          student_id:
+            session.userType === UserType.STUDENT
+              ? session.data?.id
+              : undefined,
+          lesson_id: body.lesson_id ?? undefined,
         },
       });
 
       return res.status(200).json({ code: 200, result });
     }
+    default:
+      return res.status(405);
   }
 }
